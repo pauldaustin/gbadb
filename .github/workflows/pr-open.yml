@@ -39,6 +39,7 @@ jobs:
     name: Builds
     runs-on: ubuntu-22.04
     permissions:
+      contents: read
       packages: write
     strategy:
       matrix:
