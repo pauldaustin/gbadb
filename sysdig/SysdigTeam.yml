@@ -1,0 +1,17 @@
+apiVersion: ops.gov.bc.ca/v1alpha1
+kind: SysdigTeam
+metadata:
+  name: da4d0e-sysdigteam
+  namespace: da4d0e-tools
+spec:
+  team:
+    description: The Sysdig Team for the OpenShift Project Set da4d0e
+    users:
+    - name: paul.austin.csnr@revolsys.com
+      role: ROLE_TEAM_EDIT
+    - name: Jed.Harrisson@gov.bc.ca
+      role: ROLE_TEAM_EDIT
+    # - name: <sysdig_email_for_developer>
+    #   role: ROLE_TEAM_STANDARD
+    # - name: <sysdig_email_for_po>
+    #   role: ROLE_TEAM_READ

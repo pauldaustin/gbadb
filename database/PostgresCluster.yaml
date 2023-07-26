@@ -1,7 +1,7 @@
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
 metadata:
-  name: gba
+  name: gbadb
 spec:
   openshift: true
   # this block is useful only if you also have monitoring set up for your cluster.
@@ -19,20 +19,18 @@ spec:
   #         limits:
   #           cpu: 100m
   #           memory: 64Mi
-  image: artifacts.developer.gov.bc.ca/bcgov-docker-local/crunchy-postgres-gis:ubi8-15.2-3.3-0
   postgresVersion: 15
+  postGISVersion: "3.3"
   instances:
     - name: pg1
-      replicas: 1
-      # this is how you create a PDB - don't make a separate one yourself!
-      minAvailable: 1
-      # these resources are for the "database" container in the "gba-pg1" set of pods
+      replicas: 2
+      minAvailable: 2
       resources:
         requests:
-          cpu: 25m
-          memory: 128Mi
+          cpu: 50m
+          memory: 64Mi
         limits:
-          cpu: 225m
+          cpu: 250m
           memory: 512Mi
       sidecars:
         # this stuff is for the "replication-cert-copy" container in the "gba-pg1" set of pods
@@ -42,14 +40,14 @@ spec:
               cpu: 25m
               memory: 16Mi
             limits:
-              cpu: 100m
+              cpu: 50m
               memory: 32Mi
       dataVolumeClaimSpec:
         accessModes:
         - "ReadWriteOnce"
         resources:
           requests:
-            storage: 12Gi
+            storage: 9Gi
         storageClassName: netapp-block-standard
       affinity:
         podAntiAffinity:
@@ -69,9 +67,9 @@ spec:
       - name: repo1
         schedules:
           # Full backup every day at 8:00am UTC
-          full: "0 8 * * *"
-          # Incremental backup every 4 hours, except at 8am UTC (when the full backup is running)
-          incremental: "0 0,4,12,16,20 * * *"
+          # full: "0 8 * * *"
+          # # Incremental backup every 4 hours, except at 8am UTC (when the full backup is running)
+          # incremental: "0 0,4,12,16,20 * * *"
         volume:
           volumeClaimSpec:
             accessModes:
@@ -84,21 +82,21 @@ spec:
       repoHost:
         resources:
           requests:
-            cpu: 25m
-            memory: 64Mi
+            cpu: 10m
+            memory: 32Mi
           limits:
-            cpu: 100m
-            memory: 128Mi
+            cpu: 50m
+            memory: 64Mi
       sidecars:
         # this stuff is for the "pgbackrest" container in the "gba-pg1" set of pods
         pgbackrest:
           resources:
             requests:
-              cpu: 25m
-              memory: 64Mi
+              cpu: 10m
+              memory: 32Mi
             limits:
-              cpu: 100m
-              memory: 128Mi
+              cpu: 50m
+              memory: 64Mi
       # allows the triggering of manual backups
       manual:
         repoName: repo1
@@ -123,10 +121,10 @@ spec:
       # there is a sidecar in these pods which are not mentioned here, but the requests/limits are teeny weeny by default so no worries there.
       resources:
         requests:
-          cpu: 25m
-          memory: 32Mi
+          cpu: 10m
+          memory: 16Mi
         limits:
-          cpu: 100m
+          cpu: 50m
           memory: 64Mi
       affinity:
         podAntiAffinity:
