@@ -1,0 +1,58 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-from-f5-ingress
+  namespace: da4d0e-dev
+spec:
+  podSelector:
+    matchLabels:
+      postgres-operator.crunchydata.com/cluster: gbadb
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              network.openshift.io/policy-group: ingress
+  policyTypes:
+    - Ingress
+# ---
+# kind: NetworkPolicy
+# apiVersion: networking.k8s.io/v1
+# metadata:
+#   name: allow-gbadb
+#   labels:
+#     postgres-operator.crunchydata.com/cluster: gbadb
+# spec:
+#   podSelector:
+#     matchLabels:
+#       postgres-operator.crunchydata.com/cluster: gbadb
+#   ingress:
+#     - from:
+#         - podSelector:
+#             matchLabels:
+#               postgres-operator.crunchydata.com/cluster: gbadb
+#       ports:
+#         - protocol: TCP
+#           port: 5432
+#         - protocol: TCP
+#           port: 8008
+#         - protocol: TCP
+#           port: 2022
+# ---
+# kind: NetworkPolicy
+# apiVersion: networking.k8s.io/v1
+# metadata:
+#   name: allow-gbadb-monitoring
+#   labels:
+#     postgres-operator.crunchydata.com/cluster: hippo-ha
+# spec:
+#   podSelector:
+#     matchLabels:
+#       postgres-operator.crunchydata.com/cluster: hippo-ha
+#   ingress:
+#     - from:
+#         - namespaceSelector:
+#             name: be1c6b
+#             environment: tools
+#       ports:
+#         - protocol: TCP
+#           port: 9187
