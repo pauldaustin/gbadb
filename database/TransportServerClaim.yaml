@@ -8,6 +8,6 @@ spec:
     interval: 10
     timeout: 10
     type: tcp
-  service: gbadb-ha
+  service: gbadb-pgbouncer
   servicePort: 5432
   
