@@ -1,3 +1,5 @@
+#https://access.crunchydata.com/documentation/postgres-operator/5.0.3/tutorial/resize-cluster/
+#https://access.crunchydata.com/documentation/postgres-operator/5.0.3/tutorial/disaster-recovery/
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
 metadata:
@@ -25,14 +27,14 @@ spec:
   imagePullPolicy: IfNotPresent
   instances:
     - name: pg1
-      replicas: 3
-      minAvailable: 1
+      replicas: 2
+      minAvailable: 2
       resources:
         requests:
-          cpu: 50m
+          cpu: 250m
           memory: 128Mi
         limits:
-          cpu: 250m
+          cpu: 500m
           memory: 512Mi
       sidecars:
         replicaCertCopy:
@@ -48,7 +50,7 @@ spec:
         - "ReadWriteOnce"
         resources:
           requests:
-            storage: 9.6Gi
+            storage: 5Gi
         storageClassName: netapp-block-standard
       affinity:
         podAntiAffinity:
@@ -73,6 +75,9 @@ spec:
     #   options: "LOGIN NOSUPERUSER inherit CREATEDB NOCREATEROLE NOREPLICATION"
   backups:
     pgbackrest:
+      configuration:
+      - secret:
+          name: gba-pgbackrest-s3-creds
       global:
         repo1-retention-full: "2"
       repos:
@@ -84,6 +89,10 @@ spec:
           # Incremental backup every 4 hours, except at 8am UTC (when the full backup is running)
           #incremental: "0 0,4,12,16,20 * * *"
           incremental: "0 0,4,12,16,20 * 1 *" # only run in January
+        s3:
+          endpoint: nrs.objectstore.gov.bc.ca
+          bucket: dszqxc
+          region: bc # Not used when it's not amazon
         volume:
           volumeClaimSpec:
             accessModes:
@@ -140,12 +149,14 @@ spec:
          - --type=full
   patroni:
     dynamicConfiguration:
+      synchronous_mode: true
       postgresql:
         parameters:
           shared_buffers: '16MB'
           wal_buffers: '-1'
           min_wal_size: '32MB'
           max_wal_size: '64MB'
+          synchronous_commit: 'on'
   proxy:
     pgBouncer:
       image: artifacts.developer.gov.bc.ca/bcgov-docker-local/crunchy-pgbouncer:ubi8-1.18-0
