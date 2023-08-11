@@ -1,12 +1,12 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: allow-from-f5-ingress
+  name: gba-allow-from-f5-ingress
   namespace: da4d0e-dev
 spec:
   podSelector:
     matchLabels:
-      postgres-operator.crunchydata.com/cluster: gbadb
+      postgres-operator.crunchydata.com/cluster: gba
   ingress:
     - from:
         - namespaceSelector:
@@ -18,18 +18,18 @@ spec:
 # kind: NetworkPolicy
 # apiVersion: networking.k8s.io/v1
 # metadata:
-#   name: allow-gbadb
+#   name: allow-gba
 #   labels:
-#     postgres-operator.crunchydata.com/cluster: gbadb
+#     postgres-operator.crunchydata.com/cluster: gba
 # spec:
 #   podSelector:
 #     matchLabels:
-#       postgres-operator.crunchydata.com/cluster: gbadb
+#       postgres-operator.crunchydata.com/cluster: gba
 #   ingress:
 #     - from:
 #         - podSelector:
 #             matchLabels:
-#               postgres-operator.crunchydata.com/cluster: gbadb
+#               postgres-operator.crunchydata.com/cluster: gba
 #       ports:
 #         - protocol: TCP
 #           port: 5432
@@ -41,7 +41,7 @@ spec:
 # kind: NetworkPolicy
 # apiVersion: networking.k8s.io/v1
 # metadata:
-#   name: allow-gbadb-monitoring
+#   name: allow-gba-monitoring
 #   labels:
 #     postgres-operator.crunchydata.com/cluster: hippo-ha
 # spec:

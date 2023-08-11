@@ -1,13 +1,13 @@
 apiVersion: porter.devops.gov.bc.ca/v1alpha1
 kind: TransportServerClaim
 metadata:
-  name: gba-tsc
+  name: gba
   namespace: da4d0e-dev
 spec:
   monitor:
     interval: 10
     timeout: 10
     type: tcp
-  service: gbadb-pgbouncer
+  service: gba-pgbouncer
   servicePort: 5432
   
