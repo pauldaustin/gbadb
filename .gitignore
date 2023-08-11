@@ -116,3 +116,5 @@ test-report.xml
 **/dist
 **/out
 **/target
+
+.DS_Store
