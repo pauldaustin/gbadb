@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: da4d0e-dev
 
 secretGenerator:
-- name: gba-pgbackrest-s3-creds
+- name: gbatest-pgbackrest-s3-creds
   files:
   - s3.conf
 
@@ -13,5 +13,5 @@ generatorOptions:
 
 resources:
 - PostgresCluster.yaml
-- TransportServerClaim.yaml
-- NetworkPolicy.yaml
+#- TransportServerClaim.yaml
+#- NetworkPolicy.yaml

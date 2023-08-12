@@ -1,11 +1,11 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: gba-allow-from-f5-ingress
+  name: gbatest-allow-from-f5-ingress
 spec:
   podSelector:
     matchLabels:
-      postgres-operator.crunchydata.com/cluster: gba
+      postgres-operator.crunchydata.com/cluster: gbatest
   ingress:
     - from:
         - namespaceSelector:

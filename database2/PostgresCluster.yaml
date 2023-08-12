@@ -3,7 +3,7 @@
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
 metadata:
-  name: gba
+  name: gbatest
 spec:
   openshift: true
   # this block is useful only if you also have monitoring set up for your cluster.
@@ -31,11 +31,11 @@ spec:
       minAvailable: 2
       resources:
         requests:
-          cpu: 250m
-          memory: 128Mi
+          cpu: 25m
+          memory: 64Mi
         limits:
-          cpu: 500m
-          memory: 512Mi
+          cpu: 50m
+          memory: 128Mi
       sidecars:
         replicaCertCopy:
           resources:
@@ -50,7 +50,7 @@ spec:
         - "ReadWriteOnce"
         resources:
           requests:
-            storage: 5.5Gi
+            storage: 512Mi
         storageClassName: netapp-block-standard
       affinity:
         podAntiAffinity:
@@ -77,30 +77,20 @@ spec:
     pgbackrest:
       configuration:
       - secret:
-          name: gba-pgbackrest-s3-creds
+          name: gbatest-pgbackrest-s3-creds
       global:
         repo1-retention-full: "2"
       repos:
       - name: repo1
         schedules:
           # Full backup every day at 8:00am UTC
-          full: "0 8 * 1 *" # only run in January
-          #full: "0 8 * * *"
+          full: "0 8 * * *"
           # Incremental backup every 4 hours, except at 8am UTC (when the full backup is running)
-          #incremental: "0 0,4,12,16,20 * * *"
-          incremental: "0 0,4,12,16,20 * 1 *" # only run in January
-#        s3:
-#          endpoint: nrs.objectstore.gov.bc.ca
-#          bucket: dszqxc
-#          region: bc # Not used when it's not amazon
-        volume:
-          volumeClaimSpec:
-            accessModes:
-            - "ReadWriteOnce"
-            resources:
-              requests:
-                storage: 1Gi
-            storageClassName: netapp-file-backup
+          incremental: "0 0,4,12,16,20 * * *"
+        s3:
+          endpoint: nrs.objectstore.gov.bc.ca
+          bucket: dszqxc
+          region: bc # Not used when it's not amazon
       repoHost:
         resources:
           requests:
