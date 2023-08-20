@@ -50,7 +50,7 @@ spec:
         - "ReadWriteOnce"
         resources:
           requests:
-            storage: 5.5Gi
+            storage: 13Gi
         storageClassName: netapp-block-standard
       affinity:
         podAntiAffinity:
@@ -79,16 +79,17 @@ spec:
       - secret:
           name: gba-pgbackrest-s3-creds
       global:
-        repo1-retention-full: "2"
+        repo1-retention-full: "1"
       repos:
       - name: repo1
         schedules:
           # Full backup every day at 8:00am UTC
-          full: "0 8 * 1 *" # only run in January
+          full: "0 * * * *" # only run in January
           #full: "0 8 * * *"
-          # Incremental backup every 4 hours, except at 8am UTC (when the full backup is running)
-          #incremental: "0 0,4,12,16,20 * * *"
-          incremental: "0 0,4,12,16,20 * 1 *" # only run in January
+          # Incremental backup every hours, except at 8am UTC (when the full backup is running)
+          incremental: "30 * * * *" # only run in January
+          #incremental: "0 0,1,2,3,4,5,6,7,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * *"
+          #incremental: "0 0,4,12,16,20 * 1 *" # only run in January
 #        s3:
 #          endpoint: nrs.objectstore.gov.bc.ca
 #          bucket: dszqxc
@@ -99,7 +100,7 @@ spec:
             - "ReadWriteOnce"
             resources:
               requests:
-                storage: 1Gi
+                storage: 33Gi
             storageClassName: netapp-file-backup
       repoHost:
         resources:
@@ -152,11 +153,13 @@ spec:
       synchronous_mode: true
       postgresql:
         parameters:
+          wal_compression: 'pglz'
           shared_buffers: '16MB'
           wal_buffers: '-1'
           min_wal_size: '32MB'
           max_wal_size: '64MB'
           synchronous_commit: 'on'
+          archive_mode: 'off'
   proxy:
     pgBouncer:
       image: artifacts.developer.gov.bc.ca/bcgov-docker-local/crunchy-pgbouncer:ubi8-1.18-0

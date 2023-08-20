@@ -79,18 +79,26 @@ spec:
       - secret:
           name: gbatest-pgbackrest-s3-creds
       global:
-        repo1-retention-full: "2"
+        repo1-retention-full: "1"
       repos:
       - name: repo1
         schedules:
           # Full backup every day at 8:00am UTC
-          full: "0 8 * * *"
+          full: "0 * * * *"
           # Incremental backup every 4 hours, except at 8am UTC (when the full backup is running)
-          incremental: "0 0,4,12,16,20 * * *"
-        s3:
-          endpoint: nrs.objectstore.gov.bc.ca
-          bucket: dszqxc
-          region: bc # Not used when it's not amazon
+          incremental: "0 * 5 * *"
+        # s3:
+        #   endpoint: nrs.objectstore.gov.bc.ca
+        #   bucket: dszqxc
+        #   region: bc # Not used when it's not amazon
+        volume:
+          volumeClaimSpec:
+            accessModes:
+            - "ReadWriteOnce"
+            resources:
+              requests:
+                storage: 384Mi
+            storageClassName: netapp-file-backup
       repoHost:
         resources:
           requests:
