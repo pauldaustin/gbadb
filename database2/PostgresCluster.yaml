@@ -50,7 +50,7 @@ spec:
         - "ReadWriteOnce"
         resources:
           requests:
-            storage: 512Mi
+            storage: 1Gi
         storageClassName: netapp-block-standard
       affinity:
         podAntiAffinity:
@@ -86,19 +86,23 @@ spec:
           # Full backup every day at 8:00am UTC
           full: "0 * * * *"
           # Incremental backup every 4 hours, except at 8am UTC (when the full backup is running)
-          incremental: "0 * 5 * *"
+          incremental: "1 * * * *"
         # s3:
         #   endpoint: nrs.objectstore.gov.bc.ca
         #   bucket: dszqxc
         #   region: bc # Not used when it's not amazon
-        volume:
-          volumeClaimSpec:
-            accessModes:
-            - "ReadWriteOnce"
-            resources:
-              requests:
-                storage: 384Mi
-            storageClassName: netapp-file-backup
+        s3:
+          endpoint: nrs.objectstore.gov.bc.ca
+          bucket: dszqxc
+          region: bc # Not used when it's not amazon
+        # volume:
+        #   volumeClaimSpec:
+        #     accessModes:
+        #     - "ReadWriteOnce"
+        #     resources:
+        #       requests:
+        #         storage: 384Mi
+        #     storageClassName: netapp-file-backup
       repoHost:
         resources:
           requests:

@@ -50,7 +50,7 @@ spec:
         - "ReadWriteOnce"
         resources:
           requests:
-            storage: 13Gi
+            storage: 11Gi
         storageClassName: netapp-block-standard
       affinity:
         podAntiAffinity:
@@ -84,7 +84,7 @@ spec:
       - name: repo1
         schedules:
           # Full backup every day at 8:00am UTC
-          full: "0 * * * *" # only run in January
+          #full: "0 * * * *" # only run in January
           #full: "0 8 * * *"
           # Incremental backup every hours, except at 8am UTC (when the full backup is running)
           incremental: "30 * * * *" # only run in January
@@ -100,7 +100,7 @@ spec:
             - "ReadWriteOnce"
             resources:
               requests:
-                storage: 33Gi
+                storage: 28Gi
             storageClassName: netapp-file-backup
       repoHost:
         resources:
