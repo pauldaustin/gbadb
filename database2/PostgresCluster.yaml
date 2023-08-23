@@ -27,7 +27,7 @@ spec:
   imagePullPolicy: IfNotPresent
   instances:
     - name: pg1
-      replicas: 2
+      replicas: 3
       minAvailable: 2
       resources:
         requests:
@@ -80,6 +80,7 @@ spec:
           name: gbatest-pgbackrest-s3-creds
       global:
         repo1-retention-full: "1"
+        repo1-s3-uri-style: path
       repos:
       - name: repo1
         schedules:
@@ -87,10 +88,6 @@ spec:
           full: "0 * * * *"
           # Incremental backup every 4 hours, except at 8am UTC (when the full backup is running)
           incremental: "1 * * * *"
-        # s3:
-        #   endpoint: nrs.objectstore.gov.bc.ca
-        #   bucket: dszqxc
-        #   region: bc # Not used when it's not amazon
         s3:
           endpoint: nrs.objectstore.gov.bc.ca
           bucket: dszqxc
