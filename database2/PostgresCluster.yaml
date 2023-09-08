@@ -28,7 +28,7 @@ spec:
   instances:
     - name: pg1
       replicas: 3
-      minAvailable: 2
+      minAvailable: 1
       resources:
         requests:
           cpu: 25m
