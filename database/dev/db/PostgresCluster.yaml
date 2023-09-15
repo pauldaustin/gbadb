@@ -30,12 +30,11 @@ spec:
         resources:
           requests:
             storage: 14Gi
+        storageClassName: netapp-block-standard
   backups:
     pgbackrest:
       global:
         repo1-retention-full: "1"
-        repo1-archive-async: "y"
-        repo1-process-max: "2"
       repos:
       - name: repo1
         schedules:
@@ -48,6 +47,7 @@ spec:
             resources:
               requests:
                 storage: 18Gi
+            storageClassName: netapp-file-backup
       repoHost:
         resources:
           requests:

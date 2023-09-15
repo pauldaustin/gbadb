@@ -10,10 +10,10 @@ spec:
       minAvailable: 0
       resources:
         requests:
-          cpu: 250m
+          cpu: 125m
           memory: 128Mi
         limits:
-          cpu: 500m
+          cpu: 250m
           memory: 512Mi
       sidecars:
         replicaCertCopy:
@@ -29,7 +29,8 @@ spec:
         - "ReadWriteOnce"
         resources:
           requests:
-            storage: 10Gi
+            storage: 1Gi
+        storageClassName: netapp-block-standard
   backups:
     pgbackrest:
       global:
@@ -45,7 +46,8 @@ spec:
             - "ReadWriteOnce"
             resources:
               requests:
-                storage: 12Gi
+                storage: 1Gi
+            storageClassName: netapp-file-backup
       repoHost:
         resources:
           requests:

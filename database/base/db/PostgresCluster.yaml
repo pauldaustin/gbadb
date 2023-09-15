@@ -28,7 +28,7 @@ spec:
   instances:
     - name: pg1
       replicas: 3
-      minAvailable: 0
+      minAvailable: 1
       resources:
         requests:
           cpu: 250m
@@ -50,7 +50,7 @@ spec:
         - "ReadWriteOnce"
         resources:
           requests:
-            storage: 14Gi
+            storage: 1Gi
         storageClassName: netapp-block-standard
       affinity:
         podAntiAffinity:
@@ -63,44 +63,27 @@ spec:
                   postgres-operator.crunchydata.com/cluster: gba
                   postgres-operator.crunchydata.com/instance-set: pg1
   users:
-    # - name: gba_user
-    #   options: "NOLOGIN"
-    # - name: gba_viewer
-    #   options: "NOLOGIN"
     - name: gba
       options: "LOGIN NOSUPERUSER inherit CREATEDB CREATEROLE NOREPLICATION"
       databases:
         - gba
-    # - name: proxy_gba
-    #   options: "LOGIN NOSUPERUSER inherit CREATEDB NOCREATEROLE NOREPLICATION"
   backups:
     pgbackrest:
-      # configuration:
-      # - secret:
-      #     name: gba-pgbackrest-s3-creds
       global:
         repo1-retention-full: "1" # more for prod 
         repo1-retention-full-type: "count"
-#        repo1-repo-bundle: "y"
-#        repo1-repo-block: "y"
       repos:
       - name: repo1
         schedules:
-#          full: "0 */4 * * *" # every 4 hours
-#          incremental: "0 0-3,5-7,9-11,13-15,17-19,21-23 * * *" # Every hour except every 4 hours UTC
           full: "0 8 * * *" # 8 am UTC
           incremental: "0,30 0-7,9-23 * * *" # Every hour except 8 am UTC
-#        s3:
-#          endpoint: nrs.objectstore.gov.bc.ca
-#          bucket: dszqxc
-#          region: bc # Not used when it's not amazon
         volume:
           volumeClaimSpec:
             accessModes:
             - "ReadWriteOnce"
             resources:
               requests:
-                storage: 18Gi
+                storage: 1Gi
             storageClassName: netapp-file-backup
       repoHost:
         resources:
@@ -166,7 +149,7 @@ spec:
         global:
           client_tls_sslmode: disable
       replicas: 3
-      minAvailable: 0
+      minAvailable: 1
       resources:
         requests:
           cpu: 50m
