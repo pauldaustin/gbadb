@@ -1,5 +1,6 @@
 #https://access.crunchydata.com/documentation/postgres-operator/5.0.3/tutorial/resize-cluster/
 #https://access.crunchydata.com/documentation/postgres-operator/5.0.3/tutorial/disaster-recovery/
+#https://github.com/CrunchyData/postgres-operator-examples/tree/main/kustomize
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
 metadata:
