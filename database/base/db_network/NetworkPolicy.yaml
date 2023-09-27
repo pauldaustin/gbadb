@@ -27,12 +27,14 @@ spec:
       postgres-operator.crunchydata.com/cluster: gba
   ingress:
     - from:
-        - podSelector:
+        - podSelector: 
             matchLabels:
               postgres-operator.crunchydata.com/cluster: gba
       ports:
         - protocol: TCP
           port: 5432
+        - protocol: TCP
+          port: 8432
         - protocol: TCP
           port: 8008
         - protocol: TCP
