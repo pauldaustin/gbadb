@@ -35,6 +35,10 @@ spec:
     pgbackrest:
       global:
         repo1-retention-full: "1"
+        repo1-retention-full-type: "count"
+        repo1-archive-async: "y"
+        repo1-archive-get-queue-max: "256MiB"
+        repo1-archive-push-queue-max: "256MiB"
       repos:
       - name: repo1
         schedules:
