@@ -70,22 +70,32 @@ spec:
         - gba
   backups:
     pgbackrest:
+      configuration:
+      - secret:
+          name: gbatest-pgbackrest-s3-creds
       global:
         repo1-retention-full: "1" # more for prod 
         repo1-retention-full-type: "count"
+        repo1-s3-uri-style: path
+        archive-async: "y"
+        archive-get-queue-max: "256MiB"
+        archive-push-queue-max: "256MiB"
+        spool-path: "/pgdata/pgbackrest/spool"
+        retention-diff: "1"
+        retention-archive: "1"
+        retention-archive-type: "incr"
+        process-max: "8"
+        compress-level: "3" # 0-9
+       # backup-standby:"y"
       repos:
       - name: repo1
         schedules:
-          full: "0 8 * * *" # 8 am UTC
-          incremental: "0,30 0-7,9-23 * * *" # Every hour except 8 am UTC
-        volume:
-          volumeClaimSpec:
-            accessModes:
-            - "ReadWriteOnce"
-            resources:
-              requests:
-                storage: 1Gi
-            storageClassName: netapp-file-backup
+          full: "0 */4 * * *"
+          incremental: "0,30 1-3,5-7,9-11,13-15,17,19,21-23 * * *"
+        s3:
+          endpoint: nrs.objectstore.gov.bc.ca
+          bucket: xxxxx
+          region: bc
       repoHost:
         resources:
           requests:

@@ -13,29 +13,31 @@ spec:
               network.openshift.io/policy-group: ingress
   policyTypes:
     - Ingress
-# ---
-# kind: NetworkPolicy
-# apiVersion: networking.k8s.io/v1
-# metadata:
-#   name: allow-gba
-#   labels:
-#     postgres-operator.crunchydata.com/cluster: gba
-# spec:
-#   podSelector:
-#     matchLabels:
-#       postgres-operator.crunchydata.com/cluster: gba
-#   ingress:
-#     - from:
-#         - podSelector:
-#             matchLabels:
-#               postgres-operator.crunchydata.com/cluster: gba
-#       ports:
-#         - protocol: TCP
-#           port: 5432
-#         - protocol: TCP
-#           port: 8008
-#         - protocol: TCP
-#           port: 2022
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-gbatest
+  labels:
+    postgres-operator.crunchydata.com/cluster: gbatest
+spec:
+  podSelector:
+    matchLabels:
+      postgres-operator.crunchydata.com/cluster: gbatest
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              postgres-operator.crunchydata.com/cluster: gbatest
+      ports:
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 8432
+        - protocol: TCP
+          port: 8008
+        - protocol: TCP
+          port: 2022
 # ---
 # kind: NetworkPolicy
 # apiVersion: networking.k8s.io/v1

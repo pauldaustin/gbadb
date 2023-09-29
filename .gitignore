@@ -118,3 +118,5 @@ test-report.xml
 **/target
 
 .DS_Store
+
+s3.conf

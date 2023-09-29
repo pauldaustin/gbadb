@@ -10,10 +10,10 @@ spec:
       minAvailable: 0
       resources:
         requests:
-          cpu: 250m
+          cpu: 500m
           memory: 128Mi
         limits:
-          cpu: 500m
+          cpu: 1000m
           memory: 512Mi
       sidecars:
         replicaCertCopy:
@@ -29,29 +29,21 @@ spec:
         - "ReadWriteOnce"
         resources:
           requests:
-            storage: 12Gi
+            storage: 10Gi
         storageClassName: netapp-block-standard
   backups:
     pgbackrest:
       global:
         repo1-retention-full: "1"
-        repo1-retention-full-type: "count"
-        repo1-archive-async: "y"
-        repo1-archive-get-queue-max: "256MiB"
-        repo1-archive-push-queue-max: "256MiB"
       repos:
       - name: repo1
         schedules:
-          full: "* * * * *"
-          incremental: "30 * * * *"
-        volume:
-          volumeClaimSpec:
-            accessModes:
-            - "ReadWriteOnce"
-            resources:
-              requests:
-                storage: 16Gi
-            storageClassName: netapp-file-backup
+          full: "0 */4 * * *"
+          incremental: "0 1-3,5-7,9-11,13-15,17-19,21-23 * * *"
+        s3:
+          endpoint: nrs.objectstore.gov.bc.ca
+          bucket: mkfvgf
+          region: bc
       repoHost:
         resources:
           requests:
@@ -63,10 +55,10 @@ spec:
       jobs:
         resources:
           requests:
-            cpu: 25m
+            cpu: 100m
             memory: 32Mi
           limits:
-            cpu: 50m
+            cpu: 200m
             memory: 64Mi
       restore:
         repoName: repo1

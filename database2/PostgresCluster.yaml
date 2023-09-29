@@ -27,15 +27,15 @@ spec:
   imagePullPolicy: IfNotPresent
   instances:
     - name: pg1
-      replicas: 3
-      minAvailable: 1
+      replicas: 1
+      minAvailable: 0
       resources:
         requests:
-          cpu: 25m
-          memory: 64Mi
-        limits:
-          cpu: 50m
+          cpu: 250m
           memory: 128Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
       sidecars:
         replicaCertCopy:
           resources:
@@ -63,16 +63,10 @@ spec:
                   postgres-operator.crunchydata.com/cluster: gba
                   postgres-operator.crunchydata.com/instance-set: pg1
   users:
-    # - name: gba_user
-    #   options: "NOLOGIN"
-    # - name: gba_viewer
-    #   options: "NOLOGIN"
     - name: gba
       options: "LOGIN NOSUPERUSER inherit CREATEDB CREATEROLE NOREPLICATION"
       databases:
         - gba
-    # - name: proxy_gba
-    #   options: "LOGIN NOSUPERUSER inherit CREATEDB NOCREATEROLE NOREPLICATION"
   backups:
     pgbackrest:
       configuration:
@@ -81,16 +75,24 @@ spec:
       global:
         repo1-retention-full: "1"
         repo1-s3-uri-style: path
+        archive-async: "y"
+        archive-get-queue-max: "256MiB"
+        archive-push-queue-max: "256MiB"
+        spool-path: "/pgdata/pgbackrest/spool"
+        retention-diff: "1"
+        retention-archive: "1"
+        retention-archive-type: "incr"
+        process-max: "8"
+        compress-level: "3" # 0-9
+       # backup-standby:"y"
       repos:
       - name: repo1
         schedules:
-          # Full backup every day at 8:00am UTC
           full: "0 * * * *"
-          # Incremental backup every 4 hours, except at 8am UTC (when the full backup is running)
-          incremental: "1 * * * *"
+          incremental: "*/5 * * * *"
         s3:
           endpoint: nrs.objectstore.gov.bc.ca
-          bucket: dszqxc
+          bucket: rznpcz
           region: bc # Not used when it's not amazon
         # volume:
         #   volumeClaimSpec:
@@ -111,10 +113,10 @@ spec:
       jobs:
         resources:
           requests:
-            cpu: 25m
+            cpu: 50m
             memory: 32Mi
           limits:
-            cpu: 50m
+            cpu: 100m
             memory: 64Mi
       restore:
         repoName: repo1
@@ -151,6 +153,7 @@ spec:
       synchronous_mode: true
       postgresql:
         parameters:
+          wal_compression: 'pglz'
           shared_buffers: '16MB'
           wal_buffers: '-1'
           min_wal_size: '32MB'
@@ -163,6 +166,7 @@ spec:
         global:
           client_tls_sslmode: disable
       replicas: 2
+      minAvailable: 1
       resources:
         requests:
           cpu: 50m
