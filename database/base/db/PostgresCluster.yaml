@@ -72,7 +72,7 @@ spec:
     pgbackrest:
       configuration:
       - secret:
-          name: gbatest-pgbackrest-s3-creds
+          name: gba-pgbackrest-s3-creds
       global:
         repo1-retention-full: "1" # more for prod 
         repo1-retention-full-type: "count"
