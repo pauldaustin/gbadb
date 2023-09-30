@@ -8,10 +8,10 @@ spec:
     - name: pg1
       replicas: 1
       minAvailable: 0
-      resources:
+      resources: 
         requests:
           cpu: 500m
-          memory: 128Mi
+          memory: 384Mi
         limits:
           cpu: 1000m
           memory: 512Mi
@@ -29,7 +29,7 @@ spec:
         - "ReadWriteOnce"
         resources:
           requests:
-            storage: 10Gi
+            storage: 15Gi
         storageClassName: netapp-block-standard
   backups:
     pgbackrest:

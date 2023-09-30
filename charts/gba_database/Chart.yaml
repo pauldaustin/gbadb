@@ -1,0 +1,6 @@
+apiVersion: v2
+name: gba_database
+description: Database for the GBA application
+type: application
+version: 0.1.0
+appVersion: "5.0.4" # crunchy operator version
